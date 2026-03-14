@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/api";
+// const BASE_URL = "http://localhost:5000/api";
+
+const BASE_URL = "https://be-pasta.onrender.com/api";
 
 const axiosClient = axios.create({
   baseURL: BASE_URL,
@@ -27,7 +29,11 @@ axiosClient.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      window.location.pathname !== "/login"
+    ) {
       localStorage.removeItem("token");
       window.location.href = "/login";
     }

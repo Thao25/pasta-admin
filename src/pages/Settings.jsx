@@ -54,18 +54,20 @@ const Settings = () => {
   const [searchingLocation, setSearchingLocation] = useState(false);
   const [newAreaInput, setNewAreaInput] = useState("");
   const [newCategoryInput, setNewCategoryInput] = useState("");
-
+  const [isCloseModalOpen, setIsCloseModalOpen] = useState(false);
+  const [closeType, setCloseType] = useState("30p"); // '30p', '1h', 'Today', 'Manual'
   const [formData, setFormData] = useState({
     TenNhaHang: "",
     DiaChi: "",
     ToaDo: { Lat: 21.028511, Lng: 105.854165 }, // Mặc định Hà Nội
     CauHinh: {
       WifiPassword: "",
-      BanKinhChoPhep: 50,
-      GioMoCua: "08:00",
-      GioDongCua: "22:00",
+      BanKinhChoPhep: "",
+      GioMoCua: "",
+      GioDongCua: "",
+      PhanTramVAT: "",
     },
-    ThongTinNganHang: { BankId: "MB", AccountNo: "", AccountName: "" },
+    ThongTinNganHang: { BankId: "", AccountNo: "", AccountName: "" },
     DanhSachKhuVuc: [],
     DanhSachLoaiMon: [],
   });
@@ -101,7 +103,7 @@ const Settings = () => {
     fetchSettings();
   }, []);
 
-  // Gọi API OpenStreetMap (Miễn phí) để dịch từ Địa chỉ -> Tọa độ
+  // Gọi API OpenStreetMap  để dịch từ Địa chỉ -> Tọa độ
   const handleSearchLocation = async () => {
     if (!formData.DiaChi.trim()) {
       toast.warning("Vui lòng nhập địa chỉ trước khi tìm kiếm!");
@@ -181,24 +183,34 @@ const Settings = () => {
       ),
     }));
   };
-  // Hàm xử lý Đóng/Mở cửa trực tiếp không qua form
-  const handleToggleStatus = async () => {
-    const newStatus = !formData.TrangThaiHoatDong;
-    // Cập nhật giao diện trước để tạo cảm giác mượt mà (Optimistic UI)
-    setFormData((prev) => ({ ...prev, TrangThaiHoatDong: newStatus }));
-
-    try {
-      // Chỉ gửi đúng trường TrangThaiHoatDong lên API
-      await axiosClient.put("/restaurant", { TrangThaiHoatDong: newStatus });
-      toast.success(
-        newStatus ? "🟢 Quán đang MỞ CỬA!" : "🔴 Quán đã ĐÓNG CỬA!",
-      );
-    } catch (error) {
-      // Nếu lỗi, hoàn tác lại trạng thái
-      setFormData((prev) => ({ ...prev, TrangThaiHoatDong: !newStatus }));
-      toast.error("Lỗi khi thay đổi trạng thái nhà hàng.");
+  // --- LOGIC ĐÓNG/MỞ CỬA LINH HOẠT ---
+  const handleToggleStatus = () => {
+    if (formData.TrangThaiHoatDong) {
+      // Nếu đang Mở -> Muốn Đóng -> Mở Modal chọn kiểu đóng
+      setIsCloseModalOpen(true);
+    } else {
+      // Nếu đang Đóng -> Muốn Mở lại ngay
+      executeToggleStatus(true, null);
     }
   };
+
+  const executeToggleStatus = async (status, type) => {
+    try {
+      const payload = { TrangThaiHoatDong: status, KieuDongCua: type };
+      await axiosClient.put("/restaurant", payload);
+
+      setFormData((prev) => ({ ...prev, TrangThaiHoatDong: status }));
+      setIsCloseModalOpen(false);
+
+      const msg = status
+        ? "🟢 Nhà hàng đã MỞ CỬA trở lại!"
+        : "🔴 Nhà hàng đã TẠM ĐÓNG CỬA!";
+      toast.success(msg);
+    } catch (e) {
+      toast.error("Lỗi cập nhật trạng thái");
+    }
+  };
+
   // Lưu cấu hình
   const handleSave = async (e) => {
     e.preventDefault();
@@ -228,29 +240,32 @@ const Settings = () => {
             Quản lý các tham số vận hành của nhà hàng
           </p>
         </div>
-        {/* NÚT TOGGLE TRẠNG THÁI NHÀ HÀNG (CẬP NHẬT TRỰC TIẾP) */}
-        <div className="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm border border-gray-200">
-          <span className="font-semibold text-gray-700 text-sm">
-            Trạng thái:
-          </span>
+        {/* TRẠNG THÁI HOẠT ĐỘNG CHÍNH */}
+        <div className="flex items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-gray-100">
+          <div className="text-right">
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+              Trạng thái hiện tại
+            </p>
+            <p
+              className={`font-black ${formData.TrangThaiHoatDong ? "text-emerald-500" : "text-rose-500"}`}
+            >
+              {formData.TrangThaiHoatDong ? "ĐANG MỞ CỬA" : "ĐÃ ĐÓNG CỬA"}
+            </p>
+          </div>
           <button
             type="button"
             onClick={handleToggleStatus}
-            className={`relative inline-flex h-8 w-14 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-              formData.TrangThaiHoatDong ? "bg-emerald-500" : "bg-gray-300"
+            className={`relative inline-flex h-10 w-18 items-center rounded-full transition-all duration-500 ${
+              formData.TrangThaiHoatDong ? "bg-emerald-500" : "bg-rose-500"
             }`}
+            style={{ width: "70px" }}
           >
             <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform duration-300 shadow-sm ${
-                formData.TrangThaiHoatDong ? "translate-x-7" : "translate-x-1"
+              className={`inline-block h-8 w-8 transform rounded-full bg-white shadow-lg transition-transform duration-500 ${
+                formData.TrangThaiHoatDong ? "translate-x-9" : "translate-x-1"
               }`}
             />
           </button>
-          <span
-            className={`font-bold w-20 text-sm ${formData.TrangThaiHoatDong ? "text-emerald-600" : "text-gray-500"}`}
-          >
-            {formData.TrangThaiHoatDong ? "MỞ CỬA" : "ĐÓNG CỬA"}
-          </span>
         </div>
       </div>
 
@@ -258,7 +273,7 @@ const Settings = () => {
         {/* BLOCK 1: THÔNG TIN CHUNG & BẢN ĐỒ */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 border-l-4 border-l-orange-500">
           <h2 className="text-xl font-bold text-gray-800 mb-5 border-b pb-3">
-            1. Thông tin & Vị trí cửa hàng
+            1. Thông tin & Vị trí nhà hàng
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
@@ -299,7 +314,7 @@ const Settings = () => {
 
             <div className="md:col-span-2">
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Địa chỉ vật lý <span className="text-red-500">*</span>
+                Địa chỉ <span className="text-red-500">*</span>
               </label>
               <div className="flex gap-2">
                 <input
@@ -373,7 +388,7 @@ const Settings = () => {
               </div>
               <div className="flex-1">
                 <label className="block text-xs font-semibold text-gray-600 mb-1">
-                  Bán kính quét (mét)
+                  Bán kính cho phép mở bàn (mét)
                 </label>
                 <input
                   type="number"
@@ -414,7 +429,7 @@ const Settings = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="grid grid-cols-3 gap-4 mt-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                 Giờ mở cửa
@@ -450,6 +465,25 @@ const Settings = () => {
                 }
               />
             </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-1.5">
+                Phần trăm VAT (%)
+              </label>
+              <input
+                type="number"
+                className="w-full border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                value={formData.CauHinh.PhanTramVAT}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    CauHinh: {
+                      ...formData.CauHinh,
+                      PhanTramVAT: e.target.value,
+                    },
+                  })
+                }
+              />
+            </div>
           </div>
         </div>
 
@@ -459,6 +493,9 @@ const Settings = () => {
             <div>
               <h2 className="text-xl font-bold text-gray-800">
                 2. Tài khoản Nhận tiền (VietQR)
+                <span className="p-2 bg-white/10 rounded-xl text-indigo-300">
+                  🏧
+                </span>
               </h2>
               <p className="text-xs text-gray-500 mt-1">
                 Hệ thống sẽ tự động tạo mã QR quét thanh toán dựa trên thông tin
@@ -471,7 +508,7 @@ const Settings = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                Ngân hàng (Tên viết tắt)
+                Ngân hàng
               </label>
               <input
                 type="text"
@@ -556,7 +593,7 @@ const Settings = () => {
                 className="flex-1 border border-gray-300 rounded-xl p-3 focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={newAreaInput}
                 onChange={(e) => setNewAreaInput(e.target.value)}
-                placeholder="Nhập tên khu vực mới (VD: Ban Công, Lầu 3...)"
+                placeholder="Nhập tên khu vực mới"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAddArea(e);
                 }}
@@ -608,7 +645,7 @@ const Settings = () => {
                 className="flex-1 border border-gray-300 rounded-xl p-2.5 focus:ring-2 focus:ring-amber-500 outline-none text-sm"
                 value={newCategoryInput}
                 onChange={(e) => setNewCategoryInput(e.target.value)}
-                placeholder="Thêm loại món (VD: Ăn vặt, Đặc sản)"
+                placeholder="Thêm loại món "
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleAddCategory(e);
                 }}
@@ -653,6 +690,66 @@ const Settings = () => {
           </button>
         </div>
       </form>
+
+      {isCloseModalOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[1000] p-4">
+          <div className="bg-white rounded-[32px] w-full max-w-md overflow-hidden shadow-2xl animate-fade-in-up">
+            <div className="p-8 text-center">
+              <div className="w-20 h-20 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl">
+                🛑
+              </div>
+              <h3 className="text-2xl font-black text-gray-800 mb-2">
+                Xác nhận đóng cửa?
+              </h3>
+              <p className="text-gray-500 text-sm mb-8">
+                Hệ thống sẽ từ chối tất cả các yêu cầu gọi món mới từ khách hàng
+                Zalo.
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {[
+                  { id: "30p", label: "30 Phút", icon: "⏱️" },
+                  { id: "1h", label: "1 Giờ", icon: "⏳" },
+                  { id: "Today", label: "Hết hôm nay", icon: "📅" },
+                  { id: "Manual", label: "Thủ công", icon: "🔒" },
+                ].map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => setCloseType(option.id)}
+                    className={`flex flex-col items-center justify-center p-4 rounded-2xl border-2 transition-all ${
+                      closeType === option.id
+                        ? "border-rose-500 bg-rose-50"
+                        : "border-gray-100 hover:border-gray-200"
+                    }`}
+                  >
+                    <span className="text-2xl mb-1">{option.icon}</span>
+                    <span
+                      className={`text-xs font-black ${closeType === option.id ? "text-rose-700" : "text-gray-500"}`}
+                    >
+                      {option.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setIsCloseModalOpen(false)}
+                  className="flex-1 py-4 rounded-2xl bg-gray-100 text-gray-500 font-bold hover:bg-gray-200 transition"
+                >
+                  Hủy
+                </button>
+                <button
+                  onClick={() => executeToggleStatus(false, closeType)}
+                  className="flex-1 py-4 rounded-2xl bg-rose-500 text-white font-black shadow-lg shadow-rose-200 hover:bg-rose-600 transition"
+                >
+                  Xác nhận đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

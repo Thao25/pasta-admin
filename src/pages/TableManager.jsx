@@ -116,7 +116,7 @@ const TableManager = () => {
             <h1>${table.SoBan}</h1>
             <p>${table.KhuVuc}</p>
             <div class="qr-container">${svgString}</div>
-            <div class="instruction">QUÉT MÃ ZALO ĐỂ GỌI MÓN</div>
+            <div class="instruction">QUÉT MÃ ZALO ĐỂ GỌI MÓN TẠI NHÀ HÀNG PASTA</div>
             <div class="sub-instruction">Không cần tải App - Chạm là Order</div>
           </div>
           <script>
@@ -305,7 +305,7 @@ const TableManager = () => {
             <form onSubmit={handleSubmitTable} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-                  Tên Bàn (Hiển thị cho khách)
+                  Tên Bàn
                 </label>
                 <input
                   type="text"

@@ -115,6 +115,9 @@ const UserManager = () => {
                 <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Ngày tạo
                 </th>
+                <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+                  Ngày cập nhật
+                </th>
                 <th className="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Hành động
                 </th>
@@ -222,7 +225,9 @@ const UserManager = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">
                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
                       </td>
-
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 font-medium">
+                        {new Date(user.updatedAt).toLocaleDateString("vi-VN")}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         {!isMainAdmin ? (
                           <button
@@ -304,11 +309,11 @@ const UserManager = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  Mật khẩu khởi tạo
+                  Mật khẩu
                 </label>
                 <input
                   required
-                  type="text"
+                  type="number"
                   className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                   value={formData.Password}
                   onChange={(e) =>
@@ -354,7 +359,7 @@ const UserManager = () => {
                   disabled={submitting}
                   className={`px-5 py-2.5 text-white rounded-xl font-bold shadow-md transition ${submitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
                 >
-                  {submitting ? "Đang tạo..." : "Lưu tài khoản"}
+                  {submitting ? "Đang lưu..." : "Tạo tài khoản"}
                 </button>
               </div>
             </form>

@@ -11,8 +11,8 @@ const FoodModal = ({
   categories = [],
 }) => {
   const initialForm = {
-    TenMon: { vi: "", en: "" },
-    MoTa: { vi: "", en: "" },
+    TenMon: { vi: " ", en: " " },
+    MoTa: { vi: " ", en: " " },
     Gia: "",
     LoaiMon: categories.length > 0 ? categories[0] : "Khác",
     AnhMinhHoa: "",
@@ -101,12 +101,13 @@ const FoodModal = ({
       const res = await axiosClient.post("/upload", body, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      // Trả về /uploads/image-123.jpg, nối thêm domain nếu cần
-      const baseUrl = axiosClient.defaults.baseURL.replace("/api", "");
-      setFormData({ ...formData, AnhMinhHoa: `${baseUrl}${res}` });
+
+      setFormData({ ...formData, AnhMinhHoa: `${res}` });
       toast.success("Đã tải ảnh lên thành công!");
+      console.log("Ảnh đã tải lên server, đường dẫn:", res);
     } catch (err) {
       toast.error("Lỗi khi tải ảnh lên server.");
+      console.error("Lỗi upload ảnh:", err);
     } finally {
       setUploading(false);
     }

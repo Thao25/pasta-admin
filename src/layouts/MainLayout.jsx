@@ -18,7 +18,7 @@ const MainLayout = () => {
     { path: "/orders", label: "Thu ngân (POS)", icon: "💻" },
     // { path: "/users", label: "Quản lý nhân sự", icon: "👤" },
   ];
-  if (user.role != "QuanLy") {
+  if (user.Role === "QuanLy") {
     menuItems.push({ path: "/tables", label: "Quản lý Bàn", icon: "🪑" });
 
     menuItems.push({ path: "/users", label: "Quản lý Nhân sự", icon: "👥" });

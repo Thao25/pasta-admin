@@ -19,7 +19,6 @@ const MenuManager = () => {
         axiosClient.get("/restaurant"),
       ]);
       setFoods(resFoods.data?.data || resFoods.data || []);
-
       const conf = resConfig.data?.data || resConfig.data || {};
       setCategories(conf.DanhSachLoaiMon || []);
     } catch (error) {
@@ -34,13 +33,13 @@ const MenuManager = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    if (window.confirm("Bạn có chắc muốn (xóa) món này không?")) {
+    if (window.confirm("Bạn có chắc muốn tạm ngưng món này không?")) {
       try {
         await axiosClient.delete(`/foods/${id}`);
         toast.success("Đã ngưng bán món ăn");
         fetchData();
       } catch (error) {
-        toast.error("Lỗi khi xóa");
+        toast.error("Lỗi khi ngưng bán món ăn");
       }
     }
   };
@@ -87,7 +86,7 @@ const MenuManager = () => {
               alt={food.TenMon.vi}
               className="w-full h-full object-cover rounded-lg border border-gray-200 shadow-sm"
               onError={(e) => {
-                e.target.src = "https://placehold.co/100x100?text=No+Image";
+                e.target.src = `https://placehold.co/150?text=${food.TenMon.vi}`;
               }}
             />
           </div>
@@ -152,7 +151,7 @@ const MenuManager = () => {
             onClick={() => handleDelete(food._id)}
             className="flex-1 lg:flex-none text-rose-500 bg-white border border-rose-200 hover:bg-rose-50 px-4 py-1.5 rounded-lg transition font-bold text-sm shadow-sm"
           >
-            Xóa
+            Tạm ngưng
           </button>
         </div>
       </div>
@@ -204,7 +203,7 @@ const MenuManager = () => {
             Quản Lý Thực Đơn
           </h1>
           <p className="text-gray-500 mt-1">
-            Phân loại món theo Khu vực (Bếp/Bar) và Loại món động
+            Phân loại món theo Khu vực (Bếp/Bar)
           </p>
         </div>
         <button

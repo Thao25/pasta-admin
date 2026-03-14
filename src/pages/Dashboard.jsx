@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import axiosClient from "../api/axiosClient";
 
-// Component hiển thị thẻ thống kê nhỏ
 const StatCard = ({ title, value, subtext, color, icon }) => (
   <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 flex items-center justify-between hover:shadow-md transition">
     <div>
@@ -23,9 +22,8 @@ const StatCard = ({ title, value, subtext, color, icon }) => (
 const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [timeframe, setTimeframe] = useState("day"); // Mặc định là xem theo ngày
+  const [timeframe, setTimeframe] = useState("day");
 
-  // Gọi API mỗi khi timeframe thay đổi
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
@@ -53,9 +51,7 @@ const Dashboard = () => {
           <h1 className="text-3xl font-bold text-gray-800">
             Báo cáo Tổng quan
           </h1>
-          <p className="text-gray-500 mt-1">
-            Dữ liệu hoạt động kinh doanh tính đến thời điểm hiện tại
-          </p>
+          <p className="text-gray-500 mt-1">Dữ liệu hoạt động kinh doanh</p>
         </div>
 
         {/* Bộ lọc thời gian */}
