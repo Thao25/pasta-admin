@@ -67,6 +67,7 @@ const Dashboard = () => {
             <option value="day">Hôm nay</option>
             <option value="week">Tuần này</option>
             <option value="month">Tháng này</option>
+            <option value="quarter">Quý này</option>
             <option value="year">Năm nay</option>
           </select>
         </div>
@@ -88,7 +89,7 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
               <StatCard
                 title="Tổng Doanh Thu"
-                value={`${data.tongDoanhThu.toLocaleString()} đ`}
+                value={`${data.tongDoanhThu.toLocaleString()} `}
                 subtext="Đã cập nhật mới nhất"
                 color="text-blue-700"
                 icon="💰"
@@ -101,7 +102,7 @@ const Dashboard = () => {
                 icon="🧾"
               />
               <StatCard
-                title="Khách Hàng Mới (Zalo)"
+                title="Khách Hàng Mới"
                 value={data.khachHangMoi}
                 subtext="Truy cập từ mã QR"
                 color="text-purple-600"
@@ -179,9 +180,9 @@ const Dashboard = () => {
                               idx === 0
                                 ? "bg-gradient-to-br from-yellow-300 to-yellow-500 text-white"
                                 : idx === 1
-                                  ? "bg-gradient-to-br from-gray-300 to-gray-400 text-white"
+                                  ? "bg-gradient-to-br from-orange-300 to-orange-400 text-white"
                                   : idx === 2
-                                    ? "bg-gradient-to-br from-orange-300 to-orange-500 text-white"
+                                    ? "bg-gradient-to-br from-gray-300 to-gray-500 text-white"
                                     : "bg-white text-gray-500 border border-gray-200"
                             }`}
                           >
@@ -197,7 +198,7 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <div className="text-right font-black text-orange-600 text-sm bg-white px-2 py-1 rounded-lg border border-orange-100 shadow-sm whitespace-nowrap ml-2">
-                          {mon.tongTien.toLocaleString()} đ
+                          {mon.GiaDonVi.toLocaleString()}
                         </div>
                       </div>
                     ))}
@@ -208,7 +209,7 @@ const Dashboard = () => {
                   className="w-full mt-6 bg-gray-50 hover:bg-gray-100 text-gray-600 font-bold py-3 rounded-xl border border-gray-200 transition text-sm flex justify-center items-center gap-2"
                   onClick={() =>
                     window.open(
-                      `http://localhost:5000/api/reports/export?timeframe=${timeframe}`,
+                      `https://be-pasta.onrender.com/api/reports/export?timeframe=${timeframe}`,
                       "_blank",
                     )
                   }

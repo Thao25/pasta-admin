@@ -127,6 +127,7 @@ const OrderPOS = () => {
     const shortOrderId = currentOrder._id
       .substring(currentOrder._id.length - 6)
       .toUpperCase();
+
     const tenNhaHang = restaurantConfig?.TenNhaHang || "NHÀ HÀNG PASTA";
     const diaChi = restaurantConfig?.DiaChi || "Địa chỉ chưa cập nhật";
 
@@ -284,10 +285,16 @@ const OrderPOS = () => {
             🍳 Đang chế biến
           </span>
         );
+      case "DaLamXong":
+        return (
+          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-md text-[10px] font-bold border border-yellow-200 shadow-sm flex items-center gap-1">
+            🍽️ Đã làm xong
+          </span>
+        );
       case "DaPhucVu":
         return (
           <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-md text-[10px] font-bold border border-purple-200 shadow-sm flex items-center gap-1">
-            🍽️ Đã phục vụ
+            🍴 Đã phục vụ
           </span>
         );
       case "HoanTat":
