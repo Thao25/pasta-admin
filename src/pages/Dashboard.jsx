@@ -48,7 +48,7 @@ const Dashboard = () => {
       {/* <div className="max-w-7xl mx-auto font-sans pb-10 relative"> */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-gray-200 pb-5">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">
+          <h1 className="text-2xl font-bold text-gray-800">
             Báo cáo Tổng quan
           </h1>
           <p className="text-gray-500 mt-1">Dữ liệu hoạt động kinh doanh</p>

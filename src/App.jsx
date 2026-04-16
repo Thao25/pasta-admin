@@ -12,6 +12,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import Settings from "./pages/Settings";
 import TableManager from "./pages/TableManager";
 import UserManager from "./pages/UserManager";
+import OrderHistory from "./pages/OrderHistory";
 function App() {
   return (
     <BrowserRouter>
@@ -33,6 +34,7 @@ function App() {
           <Route path="/tables" element={<TableManager />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/users" element={<UserManager />} />
+          <Route path="/order-history" element={<OrderHistory />} />
         </Route>
 
         {/* Route không tồn tại -> Về trang chủ */}

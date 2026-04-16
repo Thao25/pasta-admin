@@ -235,7 +235,7 @@ const Settings = () => {
       {/* <div className="max-w-5xl mx-auto font-sans pb-10"> */}
       <div className="flex justify-between items-center mb-8 border-b pb-4">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Cài đặt Hệ thống</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Cài đặt Hệ thống</h1>
           <p className="text-gray-500 mt-1">
             Quản lý các tham số vận hành của nhà hàng
           </p>

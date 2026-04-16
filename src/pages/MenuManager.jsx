@@ -199,7 +199,7 @@ const MenuManager = () => {
     <div className="max-w-7xl mx-auto font-sans pb-10">
       <div className="flex justify-between items-center mb-8 border-b pb-5 border-gray-200">
         <div>
-          <h1 className="text-3xl font-extrabold text-gray-800">
+          <h1 className="text-2xl font-extrabold text-gray-800">
             Quản Lý Thực Đơn
           </h1>
           <p className="text-gray-500 mt-1">

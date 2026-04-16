@@ -85,7 +85,7 @@ const UserManager = () => {
       {/* <div className="max-w-6xl mx-auto font-sans pb-10"> */}
       <div className="flex justify-between items-center mb-8 border-b pb-5 border-gray-200">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Quản Lý Nhân Sự</h1>
+          <h1 className="text-2xl font-bold text-gray-800">Quản Lý Nhân Sự</h1>
           <p className="text-gray-500 mt-1">
             Cấp tài khoản và phân quyền cho nhân viên đăng nhập App/Web
           </p>

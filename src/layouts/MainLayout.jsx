@@ -13,12 +13,21 @@ const MainLayout = () => {
 
   // Danh sách menu
   const menuItems = [
-    { path: "/", label: "Tổng quan", icon: "📊" },
+    {
+      path: "/order-history",
+      label: "Đơn hàng hôm nay",
+      icon: "📜",
+    },
     { path: "/menu", label: "Quản lý Món ăn", icon: "🍔" },
     { path: "/orders", label: "Thu ngân (POS)", icon: "💻" },
     // { path: "/users", label: "Quản lý nhân sự", icon: "👤" },
   ];
   if (user.Role === "QuanLy") {
+    menuItems.unshift({
+      path: "/",
+      label: "Tổng quan",
+      icon: "📊",
+    });
     menuItems.push({ path: "/tables", label: "Quản lý Bàn", icon: "🪑" });
 
     menuItems.push({ path: "/users", label: "Quản lý Nhân sự", icon: "👥" });
