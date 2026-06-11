@@ -143,6 +143,8 @@ const OrderPOS = () => {
         total: "T.Tiền",
         grandTotal: "TỔNG CỘNG",
         thanks: "Cảm ơn quý khách và hẹn gặp lại!",
+        address: " Đ/C: Học viện Kỹ thuật Mật mã",
+        name: "NHÀ HÀNG PASTA",
       },
       en: {
         title: "PASTA RECEIPT",
@@ -154,6 +156,8 @@ const OrderPOS = () => {
         total: "Amount",
         grandTotal: "TOTAL",
         thanks: "Thank you & See you again!",
+        address: " Address: Vietnam Academy of Cryptography Techniques",
+        name: "PASTA RESTAURANT",
       },
     };
 
@@ -180,8 +184,8 @@ const OrderPOS = () => {
           </style>
         </head>
         <body>
-          <div class="center bold txt-large mb-2">${tenNhaHang.toUpperCase()}</div>
-          <div class="center txt-medium">Đ/C: ${diaChi}</div>
+          <div class="center bold txt-large mb-2">${lang.name}</div>
+          <div class="center txt-medium">${lang.address}</div>
           <div class="line"></div>
           
           <div class="center bold txt-large mb-2">${lang.title}</div>
@@ -214,14 +218,21 @@ const OrderPOS = () => {
                     ${item.TuyChonDaChon?.length > 0 ? `<div style="font-size: 11px; color: #555;">+ ${item.TuyChonDaChon.map((o) => o.Ten).join(", ")}</div>` : ""}
                   </td>
                   <td class="center">${item.SoLuong}</td>
-                  <td class="right">${(item.GiaDonVi * item.SoLuong).toLocaleString()}</td>
+                  <td class="right">${(
+                    item.GiaDonVi +
+                    item.TuyChonDaChon.reduce((acc, opt) => acc + opt.Gia, 0)
+                  ).toLocaleString()}</td>
                 </tr>
               `;
             }).join("")}
           </table>
           <div class="line"></div>
-          
+                    <div style="display: flex; justify-content: space-between; font-size: 14px;">
+            <span>VAT (8%): </span>
+            <span> ${(currentOrder.TongTien * 0.08).toLocaleString()}</span>
+          </div>
           <div style="display: flex; justify-content: space-between; font-size: 16px;" class="bold">
+       
             <span>${lang.grandTotal}:</span>
             <span>${currentOrder.TongTien.toLocaleString()} đ</span>
           </div>
@@ -471,7 +482,10 @@ const OrderPOS = () => {
                     )}
                   </div>
                   <p className="font-bold text-gray-900 mt-1 text-base">
-                    {(item.GiaDonVi * item.SoLuong).toLocaleString()} đ
+                    {(
+                      item.GiaDonVi +
+                      item.TuyChonDaChon.reduce((acc, opt) => acc + opt.Gia, 0)
+                    ).toLocaleString()}
                   </p>
                 </div>
               ))}

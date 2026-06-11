@@ -92,6 +92,8 @@ const Settings = () => {
             },
             DanhSachKhuVuc: data.DanhSachKhuVuc || prev.DanhSachKhuVuc,
             DanhSachLoaiMon: data.DanhSachLoaiMon || prev.DanhSachLoaiMon,
+            KhuVucDangDung: data.KhuVucDangDung || prev.KhuVucDangDung,
+            LoaiMonDangDung: data.LoaiMonDangDung || prev.LoaiMonDangDung,
           }));
         }
       } catch (error) {
@@ -155,6 +157,11 @@ const Settings = () => {
   };
 
   const handleRemoveArea = (indexToRemove) => {
+    const area = formData.DanhSachKhuVuc[indexToRemove];
+    if (formData.KhuVucDangDung.includes(area)) {
+      toast.error(`Không thể xóa "${area}" vì đang có bàn sử dụng!`);
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       DanhSachKhuVuc: prev.DanhSachKhuVuc.filter(
@@ -176,6 +183,13 @@ const Settings = () => {
     }
   };
   const handleRemoveCategory = (indexToRemove) => {
+    const category = formData.DanhSachLoaiMon[indexToRemove];
+    if (formData.LoaiMonDangDung.includes(category)) {
+      toast.error(
+        `Không thể xóa "${category}" vì đang có món ăn thuộc loại này!`,
+      );
+      return;
+    }
     setFormData((prev) => ({
       ...prev,
       DanhSachLoaiMon: prev.DanhSachLoaiMon.filter(
@@ -608,24 +622,32 @@ const Settings = () => {
             </div>
 
             <div className="flex flex-wrap gap-3 p-4 bg-gray-50 rounded-xl min-h-[80px]">
-              {formData.DanhSachKhuVuc.map((khuVuc, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-full shadow-sm"
-                >
-                  <span className="font-semibold text-gray-700">{khuVuc}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveArea(index)}
-                    className="text-red-400 hover:text-red-600 font-bold ml-1"
+              {formData.DanhSachKhuVuc.map((khuVuc, index) => {
+                const isUsed = formData.KhuVucDangDung.includes(khuVuc);
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-full shadow-sm"
                   >
-                    &times;
-                  </button>
-                </div>
-              ))}
+                    <span className="font-semibold text-gray-700">
+                      {khuVuc}
+                    </span>
+                    {!isUsed && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveArea(index)}
+                        className="text-red-400 hover:text-red-600 font-bold ml-1"
+                      >
+                        &times;
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+
               {formData.DanhSachKhuVuc.length === 0 && (
                 <span className="text-gray-400 italic flex items-center">
-                  Chưa có khu vực nào. Hãy thêm ở trên!
+                  Chưa có khu vực nào. Hãy thêm khu vực mới!
                 </span>
               )}
             </div>
@@ -660,21 +682,26 @@ const Settings = () => {
             </div>
 
             <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-xl min-h-[80px]">
-              {formData.DanhSachLoaiMon.map((loai, index) => (
-                <div
-                  key={index}
-                  className="flex items-center gap-1 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm text-sm"
-                >
-                  <span className="font-semibold text-gray-700">{loai}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveCategory(index)}
-                    className="text-red-400 hover:text-red-600 font-bold ml-1"
+              {formData.DanhSachLoaiMon.map((loai, index) => {
+                const isUsed = formData.LoaiMonDangDung.includes(loai);
+                return (
+                  <div
+                    key={index}
+                    className="flex items-center gap-1 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm text-sm"
                   >
-                    &times;
-                  </button>
-                </div>
-              ))}
+                    <span className="font-semibold text-gray-700">{loai}</span>
+                    {!isUsed && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveCategory(index)}
+                        className="text-red-400 hover:text-red-600 font-bold ml-1"
+                      >
+                        &times;
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -698,14 +725,9 @@ const Settings = () => {
               <div className="w-20 h-20 bg-rose-100 text-rose-500 rounded-3xl flex items-center justify-center mx-auto mb-6 text-4xl">
                 🛑
               </div>
-              <h3 className="text-2xl font-black text-gray-800 mb-2">
+              <h3 className="text-2xl font-black text-gray-800 mb-2 mb-8">
                 Xác nhận đóng cửa?
               </h3>
-              <p className="text-gray-500 text-sm mb-8">
-                Hệ thống sẽ từ chối tất cả các yêu cầu gọi món mới từ khách hàng
-                Zalo.
-              </p>
-
               <div className="grid grid-cols-2 gap-3 mb-8">
                 {[
                   { id: "30p", label: "30 Phút", icon: "⏱️" },

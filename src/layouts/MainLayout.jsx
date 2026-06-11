@@ -18,7 +18,7 @@ const MainLayout = () => {
       label: "Đơn hàng hôm nay",
       icon: "📜",
     },
-    { path: "/menu", label: "Quản lý Món ăn", icon: "🍔" },
+    { path: "/menu", label: "Quản lý thực đơn", icon: "🍔" },
     { path: "/orders", label: "Thu ngân (POS)", icon: "💻" },
     // { path: "/users", label: "Quản lý nhân sự", icon: "👤" },
   ];

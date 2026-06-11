@@ -325,7 +325,7 @@ const UserManager = () => {
 
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
-                  Bộ phận (Phân quyền)
+                  Bộ phận
                 </label>
                 <select
                   className="w-full border border-gray-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"

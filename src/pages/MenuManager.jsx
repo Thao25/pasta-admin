@@ -102,6 +102,19 @@ const MenuManager = () => {
                 ⚙️ {food.TuyChon.length} Tùy chọn
               </span>
             )}
+            {food.TuyChon && food.TuyChon.length > 0 && (
+              <p className="text-xs text-gray-400 mt-1 line-clamp-2">
+                {food.TuyChon.slice(0, 3).map((tuyChon, index) => (
+                  <span key={index}>
+                    {tuyChon.TenNhom.vi}
+                    {index < food.TuyChon.length - 1 && " ,"}
+                  </span>
+                ))}
+                {/* Hiển thị tối đa 3 nhóm tùy chọn, nếu có */}
+                {food.TuyChon.length > 3 &&
+                  `và ${food.TuyChon.length - 3} tùy chọn khác...`}
+              </p>
+            )}
           </div>
         </div>
 
